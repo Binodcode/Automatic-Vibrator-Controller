@@ -1,0 +1,148 @@
+const int sensorPin = 2;
+const int startRelayPin = 3;
+const int sensorSwitch = 4; 
+const int timerSwitch = 5;
+const int aPin = A5;
+const int stopRelayPin = 13;
+const int disp_pin[] = {12, 11, 10, 9, 8, 7, 6};
+int sensorMode = 0;
+int timerMode = 0;
+int mappedValue = 1;
+const long relayOnTime = 500;
+const long waitTime = 5000;
+
+void setup() {
+  for (int i = 0; i < 7; i++) {
+    pinMode(disp_pin[i], OUTPUT);
+  }
+  pinMode(sensorPin, INPUT);
+  pinMode(startRelayPin, OUTPUT);
+  pinMode(stopRelayPin, OUTPUT);
+  pinMode(sensorSwitch, INPUT);
+  pinMode(timerSwitch, INPUT);
+  digitalWrite(startRelayPin, LOW);
+  digitalWrite(stopRelayPin, LOW);
+}
+
+void loop() {
+  if (digitalRead(sensorSwitch) == HIGH) {
+    sensorMode = 1;
+    timerMode = 0;
+  } else if (digitalRead(timerSwitch) == HIGH) {
+    sensorMode = 0;
+    timerMode = 1;
+    mappedValue = map(analogRead(aPin), 0, 1023, 1, 9);
+  }
+
+  if (sensorMode == 1) {
+    int sensorValue = digitalRead(sensorPin);
+    if (sensorValue == LOW) {
+      delay(1000);
+      if (digitalRead(sensorPin) == LOW) {
+        digitalWrite(startRelayPin, HIGH);
+        delay(relayOnTime);
+        digitalWrite(startRelayPin, LOW);
+        delay(1000);
+        digitalWrite(stopRelayPin, HIGH);
+        delay(relayOnTime);
+        digitalWrite(stopRelayPin, LOW);
+        delay(waitTime);
+      }
+    }
+  }
+
+  if (timerMode == 1) {
+  switch(mappedValue)
+  {
+case 1:
+digitalWrite(disp_pin[0], LOW);
+digitalWrite(disp_pin[1], HIGH);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], LOW);
+digitalWrite(disp_pin[4], LOW);
+digitalWrite(disp_pin[5], LOW);
+digitalWrite(disp_pin[6], LOW);
+break;
+case 2:
+digitalWrite(disp_pin[0], HIGH);
+digitalWrite(disp_pin[1], HIGH);
+digitalWrite(disp_pin[2], LOW);
+digitalWrite(disp_pin[3], HIGH);
+digitalWrite(disp_pin[4], HIGH);
+digitalWrite(disp_pin[5], LOW);
+digitalWrite(disp_pin[6], HIGH);
+break;
+case 3:
+digitalWrite(disp_pin[0], HIGH);
+digitalWrite(disp_pin[1], HIGH);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], HIGH);
+digitalWrite(disp_pin[4], LOW);
+digitalWrite(disp_pin[5], LOW);
+digitalWrite(disp_pin[6], HIGH);
+break;
+case 4:
+digitalWrite(disp_pin[0], LOW);
+digitalWrite(disp_pin[1], HIGH);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], LOW);
+digitalWrite(disp_pin[4], LOW);
+digitalWrite(disp_pin[5], HIGH);
+digitalWrite(disp_pin[6], HIGH);
+break;
+case 5:
+digitalWrite(disp_pin[0], HIGH);
+digitalWrite(disp_pin[1], LOW);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], HIGH);
+digitalWrite(disp_pin[4], LOW);
+digitalWrite(disp_pin[5], HIGH);
+digitalWrite(disp_pin[6], HIGH);
+break;
+case 6:
+digitalWrite(disp_pin[0], HIGH);
+digitalWrite(disp_pin[1], LOW);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], HIGH);
+digitalWrite(disp_pin[4], HIGH);
+digitalWrite(disp_pin[5], HIGH);
+digitalWrite(disp_pin[6], HIGH);
+break;
+case 7:
+digitalWrite(disp_pin[0], HIGH);
+digitalWrite(disp_pin[1], HIGH);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], LOW);
+digitalWrite(disp_pin[4], LOW);
+digitalWrite(disp_pin[5], LOW);
+digitalWrite(disp_pin[6], LOW);
+break;
+case 8:
+digitalWrite(disp_pin[0], HIGH);
+digitalWrite(disp_pin[1], HIGH);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], HIGH);
+digitalWrite(disp_pin[4], HIGH);
+digitalWrite(disp_pin[5], HIGH);
+digitalWrite(disp_pin[6], HIGH);
+break;
+case 9:
+digitalWrite(disp_pin[0], HIGH);
+digitalWrite(disp_pin[1], HIGH);
+digitalWrite(disp_pin[2], HIGH);
+digitalWrite(disp_pin[3], HIGH);
+digitalWrite(disp_pin[4], LOW);
+digitalWrite(disp_pin[5], HIGH);
+digitalWrite(disp_pin[6], HIGH);
+break;
+  }
+digitalWrite(startRelayPin, HIGH);
+delay(relayOnTime);
+digitalWrite(startRelayPin, LOW);
+delay(1000);
+digitalWrite(stopRelayPin, HIGH);
+delay(relayOnTime);
+digitalWrite(stopRelayPin, LOW);
+delay(mappedValue * 2000);
+  }
+}
